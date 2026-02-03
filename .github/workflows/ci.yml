@@ -1,0 +1,160 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [ main, master ]
+  push:
+    branches: [ main, master ]
+
+jobs:
+  backend:
+    name: Backend tests & API checks
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: pharmadb_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      API_VERSION: '1'
+      DATABASE_URL: postgresql://postgres:postgres@127.0.0.1:5432/pharmadb_test
+      TEST_DATABASE_URL: postgresql://postgres:postgres@127.0.0.1:5432/pharmadb_test
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      - name: Install backend dependencies
+        working-directory: backend
+        run: npm ci
+      - name: Run DB migrations
+        working-directory: backend
+        run: npm run migrate
+      - name: Start backend server
+        working-directory: backend
+        run: |
+          nohup npm start > server.log 2>&1 &
+      - name: Wait for backend to be ready
+        run: |
+          for i in {1..30}; do
+            if curl -sSf http://localhost:8080/api/_health >/dev/null 2>&1; then
+              echo "Backend is ready"; exit 0
+            fi
+            sleep 1
+          done
+          echo "Backend did not become ready";
+          cat backend/server.log || true
+          exit 1
+      - name: Enforce X-API-Version header
+        run: |
+          if curl -sI http://localhost:8080/api/_health | grep -i '^x-api-version: *1' ; then
+            echo 'X-API-Version header present'
+          else
+            echo 'Missing X-API-Version header' ; exit 1
+          fi
+      - name: Run backend tests
+        working-directory: backend
+        run: npm test
+
+  frontend:
+    name: Frontend tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      - name: Install frontend dependencies
+        working-directory: frontend
+        run: npm ci
+      - name: Run frontend tests
+        working-directory: frontend
+        run: npm test
+
+  e2e:
+    name: E2E (Playwright)
+    needs: [backend, frontend]
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: pharmadb_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      API_VERSION: '1'
+      DATABASE_URL: postgresql://postgres:postgres@127.0.0.1:5432/pharmadb_test
+      TEST_DATABASE_URL: postgresql://postgres:postgres@127.0.0.1:5432/pharmadb_test
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      - name: Install backend dependencies
+        working-directory: backend
+        run: npm ci
+      - name: Run DB migrations
+        working-directory: backend
+        run: npm run migrate
+      - name: Start backend server
+        working-directory: backend
+        run: |
+          nohup npm start > server.log 2>&1 &
+      - name: Wait for backend to be ready
+        run: |
+          for i in {1..30}; do
+            if curl -sSf http://localhost:8080/api/_health >/dev/null 2>&1; then
+              echo "Backend is ready"; exit 0
+            fi
+            sleep 1
+          done
+          echo "Backend did not become ready";
+          cat backend/server.log || true
+          exit 1
+      - name: Install frontend dependencies
+        working-directory: frontend
+        run: npm ci
+      - name: Build frontend
+        working-directory: frontend
+        run: npm run build
+      - name: Start frontend preview
+        working-directory: frontend
+        run: nohup npm run preview -- --port 5173 > preview.log 2>&1 &
+      - name: Wait for frontend to be ready
+        run: |
+          for i in {1..30}; do
+            if curl -sSf http://localhost:5173/ >/dev/null 2>&1; then
+              echo "Frontend preview ready"; exit 0
+            fi
+            sleep 1
+          done
+          echo "Frontend did not become ready";
+          tail -n +1 frontend/preview.log || true
+          exit 1
+      - name: Install Playwright browsers
+        working-directory: frontend
+        run: npm run e2e:install-browsers
+      - name: Run Playwright E2E tests
+        working-directory: frontend
+        run: npm run test:e2e
+

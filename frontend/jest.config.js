@@ -1,0 +1,1 @@
+module.exports = { testEnvironment: 'jsdom', testTimeout: 20000, setupFilesAfterEnv: ['./tests/setupTests.js'] };

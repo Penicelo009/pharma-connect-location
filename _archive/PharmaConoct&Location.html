@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>PharmaConnect&Location — Localize Farmácias Perto de Si</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="PharmaConoct%26Location.css" />
+</head>
+<body>
+  <!-- Header -->
+  <header class="site-header">
+
+    <div class="container header-wrap">
+      <a class="brand" href="#inicio" aria-label="PharmaConnect&Location">
+        
+        <span>PharmaConnect&Location</span>
+      </a>
+      
+      <!-- Cart widget mount (non-breaking) -->
+      <div id="pharma-cart" data-cart-drawer aria-label="Carrinho" style="display:inline-block;"></div>
+      
+      <button class="menu-toggle" aria-controls="menu" aria-expanded="true">
+        <span class="sr-only">Abrir menu</span>
+        ☰
+      </button>
+
+      <nav id="menu" class="nav">
+        <a href="#inicio">Início</a>
+        <a href="#como-funciona">Como funciona</a>
+        <a href="#destaques">Destaques</a>
+        <a href="#cadastrar">Cadastrar</a>
+        <a href="entrega.html">Entrega</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <main id="inicio" class="hero">
+    <div class="container hero-grid">
+      <section class="hero-text">
+        <span class="pill">Localizador de farmácias</span>
+        <h1>Encontre farmácias próximas e compare preços</h1>
+        <p class="lead">Use a sua localização para ver <strong>farmácias abertas agora</strong>, disponibilidade de medicamentos e opções de <strong>entrega</strong>.</p>
+
+        <form class="search" action="#" autocomplete="off">
+          <label class="sr-only" for="med">Nome do medicamento</label>
+          <input id="med" name="med" type="text" placeholder="Ex.: Paracetamol 500 mg" />
+
+          <button type="button" id="btn-geo" class="btn outline">
+            📍 Usar minha localização
+          </button>
+
+          <button type="submit" class="btn primary">Pesquisar</button>
+          <p id="geo-status" class="hint" aria-live="polite"></p>
+        </form>
+
+        <ul class="benefits">
+          <li>✔ Parceiros verificados</li>
+          <li>✔ Filtrar por “Aberto agora”</li>
+          <li>✔ Entrega ao domicílio</li>
+        </ul>
+      </section>
+
+      <aside class="map-card" aria-label="Mapa">
+        <!-- Placeholder de mapa (trocar depois por Leaflet/Google Maps) -->
+        <div class="map-placeholder">
+          <div class="radar"></div>
+          <iframe src="https://www.google.com/maps/embed?pb=!1m16!1m12!1m3!1d14357.505587136462!2d32.571199089306965!3d-25.88999421804487!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!2m1!1sfarm%C3%A1cias!5e0!3m2!1spt-PT!2smz!4v1756194508807!5m2!1spt-PT!2smz" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+          <span>Mapa — sua área</span>
+        </div>
+        <button class="btn ghost" type="button">Mostrar rota</button>
+      </aside>
+    </div>
+  </main>
+
+  <!-- Como funciona -->
+  <section id="como-funciona" class="steps">
+    <div class="container">
+      <h2>Como funciona</h2>
+      <div class="steps-grid">
+        <div class="step">
+          <div class="icon">📍</div>
+          <h3>1. Partilhe a localização</h3>
+          <p>Ative o GPS para ver farmácias nas proximidades.</p>
+        </div>
+        <div class="step">
+          <div class="icon">💊</div>
+          <h3>2. Procure o medicamento</h3>
+          <p>Pesquise pelo nome e veja disponibilidade e preço.</p>
+        </div>
+        <div class="step">
+          <div class="icon">🚚</div>
+          <h3>3. Escolha retirar ou entregar</h3>
+          <p>Veja rota até a loja ou peça entrega ao domicílio.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Destaques -->
+  <section id="destaques" class="highlights">
+    <div class="container highlights-grid">
+      <article class="card">
+        <h3>Aberto agora</h3>
+        <p>Filtre por horário para encontrar atendimento imediato.</p>
+      </article>
+      <article class="card">
+        <h3>Perto de si</h3>
+        <p>Ordene por distância e evite deslocações longas.</p>
+      </article>
+      <article class="card">
+        <h3>Entrega rápida</h3>
+        <p>Parceiros com entrega na mesma hora, quando disponível.</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- Call to action de cadastro -->
+  <section id="cadastrar" class="cta">
+    <div class="container cta-wrap">
+      <div>
+        <h2>É proprietário(a) de farmácia?</h2>
+        <p>Cadastre a sua farmácia para vender online e aparecer no mapa.</p>
+      </div>
+      <a class="btn inverse" href="cadastro.html">Cadastrar farmácia</a>
+
+      <!-- Hidden PrescriptionUpload mount for progressive enhancement; non-intrusive -->
+      <div data-prescription-upload data-order-id="" aria-hidden="true" style="display:none"></div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container footer-wrap">
+      <p>© 2025 PharmaConnect&Location. Todos os direitos reservados.</p>
+      <nav class="footer-nav">
+        <a href="#inicio">Início</a>
+        <a href="#como-funciona">Como funciona</a>
+        <a href="#destaques">Destaques</a>
+        <a href="#cadastrar">Cadastrar</a>
+        <a href="entrega.html">Entrega</a>
+      </nav>
+    </div>
+  </footer>
+
+  <link rel="script" href="PharmaConoct%26Location.js" />
+  <!-- PharmaWidgets bundle (declarative, non-blocking) -->
+  <script defer src="/static/widgets.bundle.js"></script>
+</body>
+</html>

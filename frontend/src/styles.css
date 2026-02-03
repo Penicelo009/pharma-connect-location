@@ -1,0 +1,23 @@
+:root{--pc-primary:#43b47f;--pc-muted:#475569;--pc-bg:#fff;--pc-border:#e6f6ef}
+body{font-family:Poppins,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+.pc-prescription-upload .pc-card{background:var(--pc-bg);border:1px solid var(--pc-border);padding:12px;border-radius:10px}
+.pc-prescription-upload .pc-label{display:block;font-weight:600;margin-bottom:8px}
+.pc-prescription-upload input[type=file]{display:block}
+.pc-preview{width:100%;max-height:220px;object-fit:contain;margin-top:8px;border-radius:8px}
+.pc-actions{display:flex;gap:8px;align-items:center;margin-top:8px}
+.pc-progress{height:6px;background:var(--pc-primary);border-radius:999px;transition:width .2s}
+.pc-msg{color:var(--pc-muted);font-size:.9rem;margin-top:8px}
+
+/* Cart drawer */
+.pc-cart-drawer{width:100%;max-width:420px;border:1px solid var(--pc-border);border-radius:8px;padding:12px;background:var(--pc-bg)}
+.pc-cart-head{font-weight:600;display:flex;justify-content:space-between}
+.pc-cart-list{margin-top:8px}
+.pc-cart-item{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px dashed var(--pc-border)}
+.pc-empty{color:var(--pc-muted);text-align:center;padding:8px}
+.pc-cart-footer{text-align:center;margin-top:12px}
+
+/* Mobile-first responsiveness */
+@media (max-width:520px){
+  .pc-prescription-upload .pc-card{padding:10px}
+  .pc-preview{max-height:160px}
+}

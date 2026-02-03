@@ -1,0 +1,434 @@
+openapi: 3.0.3
+info:
+  title: PharmaConnect API
+  version: "1.0.0"
+  description: |-
+    Production-grade API v1 for PharmaConnect&Location — frozen contract.
+    See README for test and migration instructions.
+servers:
+  - url: http://localhost:8080
+    description: Local dev
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        email:
+          type: string
+        name:
+          type: string
+        role:
+          type: string
+          enum: [user, pharmacy, delivery, admin]
+    AuthTokens:
+      type: object
+      properties:
+        accessToken:
+          type: string
+        refreshToken:
+          type: string
+        expiresIn:
+          type: string
+    OrderItem:
+      type: object
+      properties:
+        medicineId:
+          type: integer
+        quantity:
+          type: integer
+        priceAtPurchase:
+          type: number
+    Order:
+      type: object
+      properties:
+        id:
+          type: integer
+        user_id:
+          type: integer
+        pharmacy_id:
+          type: integer
+        total:
+          type: number
+        status:
+          type: string
+          enum: [pending, approved, rejected, completed]
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderItem'
+    Prescription:
+      type: object
+      properties:
+        id:
+          type: integer
+        user_id:
+          type: integer
+        order_id:
+          type: integer
+        original_filename:
+          type: string
+        mime_type:
+          type: string
+        size_bytes:
+          type: integer
+        storage_driver:
+          type: string
+        checksum:
+          type: string
+        status:
+          type: string
+          enum: [pending, approved, rejected]
+  headers:
+    X-API-Version:
+      description: API version header
+      schema:
+        type: string
+paths:
+  /api/auth/register:
+    post:
+      summary: Register a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+                name:
+                  type: string
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security: []
+  /api/auth/login:
+    post:
+      summary: Login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email: { type: string }
+                password: { type: string }
+      responses:
+        '200':
+          description: Tokens
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthTokens'
+        '401':
+          description: Invalid credentials
+  /api/auth/refresh:
+    post:
+      summary: Rotate refresh token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                refreshToken: { type: string }
+      responses:
+        '200':
+          description: New tokens
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthTokens'
+  /api/auth/logout:
+    post:
+      summary: Logout (revoke refresh token optional)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                refreshToken: { type: string }
+      responses:
+        '204':
+          description: Logged out
+      security: []
+  /api/users/me:
+    get:
+      summary: Get current user
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: User info
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+  /api/storage/{namespace}/{key}:
+    parameters:
+      - name: namespace
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: key
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      summary: Get stored value
+      responses:
+        '200':
+          description: Value
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  value: { type: object }
+        '404':
+          description: Not found
+    post:
+      summary: Set stored value
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                value: { type: object }
+      responses:
+        '201':
+          description: Stored
+    delete:
+      summary: Delete stored value
+      responses:
+        '204':
+          description: Deleted
+  /api/orders:
+    post:
+      summary: Create an order
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                pharmacyId: { type: integer }
+                items:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      medicineId: { type: integer }
+                      quantity: { type: integer }
+                total: { type: number }
+                prescriptionProvided: { type: boolean }
+                contact:
+                  type: object
+                  properties:
+                    name: { type: string }
+                    phone: { type: string }
+                    address: { type: string }
+      responses:
+        '201':
+          description: Created order
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        '400': { description: 'Validation error' }
+        '403': { description: 'Subscription or prescription required' }
+  /api/orders/{id}:
+    get:
+      summary: Get an order
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Order
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        '403': { description: 'Forbidden' }
+        '404': { description: 'Not found' }
+  /api/orders/{id}/status:
+    patch:
+      summary: Update order status
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  enum: [approved, rejected, completed]
+      security:
+        - bearerAuth: []
+      responses:
+        '200': { description: 'Updated' }
+        '403': { description: 'Forbidden' }
+  /api/prescriptions:
+    post:
+      summary: Upload a prescription (image or PDF)
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                orderId:
+                  type: integer
+                notes:
+                  type: string
+                checksum:
+                  type: string
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Prescription'
+        '200':
+          description: Already uploaded
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message: { type: string }
+                  id: { type: integer }
+        '400': { description: 'Invalid' }
+        '413': { description: 'File too large' }
+    get:
+      summary: List (not implemented)
+      responses:
+        '200': { description: 'OK' }
+  /api/prescriptions/{id}:
+    get:
+      summary: Get prescription metadata
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Metadata
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Prescription'
+        '403': { description: 'Forbidden' }
+  /api/prescriptions/lookup:
+    get:
+      summary: Lookup prescription by checksum
+      parameters:
+        - name: checksum
+          in: query
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id: { type: integer }
+                  status: { type: string }
+                  order_id: { type: integer }
+        '404': { description: 'Not found' }
+  /api/prescriptions/{id}/review:
+    post:
+      summary: Review prescription (approve/reject)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  enum: [approved, rejected]
+                notes:
+                  type: string
+      security:
+        - bearerAuth: []
+      responses:
+        '200': { description: 'Updated' }
+        '403': { description: 'Forbidden' }
+  /api/_health:
+    get:
+      summary: Health
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: { type: string }
+  /api/admin/stats:
+    get:
+      summary: Admin stats (example)
+      security:
+        - bearerAuth: []
+      responses:
+        '200': { description: 'Stats' }
+security:
+  - bearerAuth: []
