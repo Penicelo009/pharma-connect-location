@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Login - PharmaConnect&Location</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/main.css" />
+</head>
+<body>
+  <div class="auth-container">
+    <div class="auth-card">
+      <div class="auth-header">
+        <h1>Entrar</h1>
+        <p class="subtitle">Bem-vindo de volta!</p>
+      </div>
+
+      <div class="info-box">
+        <p>Esta é uma demonstração. Use a opção "Criar Conta" para começar.</p>
+      </div>
+
+      <div class="auth-footer">
+        <p>Não tem uma conta? <a href="/auth/cadastro.html">Criar Conta</a></p>
+        <p><a href="/index.html">Voltar ao início</a></p>
+      </div>
+    </div>
+  </div>
+
+  <script src="/assets/js/auth.js"></script>
+  <script src="/assets/js/router.js"></script>
+  <script>
+    if (Auth.isAuthenticated()) {
+      const tipo = Auth.getUserType();
+      Router.redirectToDashboard(tipo);
+    }
+  </script>
+</body>
+</html>

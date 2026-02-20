@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PharmaConnect&Location — Localize Farmácias Perto de Si</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/home.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-wrap">
+      <a class="brand" href="#inicio" aria-label="PharmaConnect&Location">
+        <span>PharmaConnect&Location</span>
+      </a>
+
+      <button class="menu-toggle" id="mobile-menu-toggle" aria-label="Abrir menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <nav id="main-menu" class="nav">
+        <a href="#inicio">Início</a>
+        <a href="#como-funciona">Como funciona</a>
+        <a href="#destaques">Destaques</a>
+        <a href="/auth/login.html" class="nav-btn">Entrar</a>
+        <a href="/auth/cadastro.html" class="nav-btn-primary">Criar Conta</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="inicio" class="hero">
+    <div class="container hero-grid">
+      <section class="hero-text">
+        <span class="pill">Localizador de farmácias</span>
+        <h1>Encontre farmácias próximas e compare preços</h1>
+        <p class="lead">Use a sua localização para ver <strong>farmácias abertas agora</strong>, disponibilidade de medicamentos e opções de <strong>entrega</strong>.</p>
+
+        <form class="search" action="#" autocomplete="off">
+          <label class="sr-only" for="med">Nome do medicamento</label>
+          <input id="med" name="med" type="text" placeholder="Ex.: Paracetamol 500 mg" />
+
+          <button type="button" id="btn-geo" class="btn outline">
+            📍 Usar localização
+          </button>
+
+          <button type="submit" class="btn primary">Pesquisar</button>
+        </form>
+
+        <p id="geo-status" class="hint" aria-live="polite"></p>
+
+        <ul class="benefits">
+          <li>Parceiros verificados</li>
+          <li>Aberto agora</li>
+          <li>Entrega rápida</li>
+        </ul>
+
+        <div class="cta-buttons">
+          <a href="/auth/cadastro.html" class="btn-cta primary">Começar Agora</a>
+          <a href="#como-funciona" class="btn-cta outline">Saiba Mais</a>
+        </div>
+      </section>
+
+      <aside class="map-card" aria-label="Mapa">
+        <div class="map-placeholder">
+          <div class="radar"></div>
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m16!1m12!1m3!1d14357.505587136462!2d32.571199089306965!3d-25.88999421804487!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!2m1!1sfarm%C3%A1cias!5e0!3m2!1spt-PT!2smz!4v1756194508807!5m2!1spt-PT!2smz"
+            width="100%"
+            height="300"
+            style="border:0; border-radius: 12px;"
+            allowfullscreen=""
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade">
+          </iframe>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <section id="como-funciona" class="steps">
+    <div class="container">
+      <h2>Como funciona</h2>
+      <div class="steps-grid">
+        <div class="step">
+          <div class="step-number">1</div>
+          <div class="icon">📍</div>
+          <h3>Partilhe a localização</h3>
+          <p>Ative o GPS para ver farmácias nas proximidades.</p>
+        </div>
+        <div class="step">
+          <div class="step-number">2</div>
+          <div class="icon">💊</div>
+          <h3>Procure o medicamento</h3>
+          <p>Pesquise pelo nome e veja disponibilidade e preço.</p>
+        </div>
+        <div class="step">
+          <div class="step-number">3</div>
+          <div class="icon">🚚</div>
+          <h3>Escolha retirar ou entregar</h3>
+          <p>Veja rota até a loja ou peça entrega ao domicílio.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="destaques" class="highlights">
+    <div class="container">
+      <h2>Destaques</h2>
+      <div class="highlights-grid">
+        <article class="card">
+          <div class="card-icon">🕐</div>
+          <h3>Aberto agora</h3>
+          <p>Filtre por horário para encontrar atendimento imediato.</p>
+        </article>
+        <article class="card">
+          <div class="card-icon">📍</div>
+          <h3>Perto de si</h3>
+          <p>Ordene por distância e evite deslocações longas.</p>
+        </article>
+        <article class="card">
+          <div class="card-icon">🚀</div>
+          <h3>Entrega rápida</h3>
+          <p>Parceiros com entrega na mesma hora, quando disponível.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-section">
+    <div class="container cta-wrap">
+      <div class="cta-content">
+        <h2>É proprietário(a) de farmácia?</h2>
+        <p>Cadastre a sua farmácia para vender online e aparecer no mapa.</p>
+      </div>
+      <a class="btn-cta inverse" href="/auth/cadastro.html">Cadastrar farmácia</a>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="container footer-wrap">
+      <div class="footer-brand">
+        <h3>PharmaConnect&Location</h3>
+        <p>Encontre farmácias perto de si</p>
+      </div>
+      <nav class="footer-nav">
+        <div class="footer-col">
+          <h4>Links</h4>
+          <a href="#inicio">Início</a>
+          <a href="#como-funciona">Como funciona</a>
+          <a href="#destaques">Destaques</a>
+        </div>
+        <div class="footer-col">
+          <h4>Conta</h4>
+          <a href="/auth/login.html">Entrar</a>
+          <a href="/auth/cadastro.html">Criar Conta</a>
+        </div>
+      </nav>
+    </div>
+    <div class="container footer-bottom">
+      <p>&copy; 2025 PharmaConnect&Location. Todos os direitos reservados.</p>
+    </div>
+  </footer>
+
+  <script src="/assets/js/auth.js"></script>
+  <script src="/assets/js/router.js"></script>
+  <script>
+    const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+    const mainMenu = document.getElementById('main-menu');
+
+    if (mobileMenuToggle && mainMenu) {
+      mobileMenuToggle.addEventListener('click', () => {
+        mainMenu.classList.toggle('active');
+        mobileMenuToggle.classList.toggle('active');
+      });
+
+      document.addEventListener('click', (e) => {
+        if (!mainMenu.contains(e.target) && !mobileMenuToggle.contains(e.target)) {
+          mainMenu.classList.remove('active');
+          mobileMenuToggle.classList.remove('active');
+        }
+      });
+    }
+
+    const geoBtn = document.getElementById('btn-geo');
+    const geoStatus = document.getElementById('geo-status');
+
+    if (geoBtn && geoStatus) {
+      geoBtn.addEventListener('click', () => {
+        if (!navigator.geolocation) {
+          geoStatus.textContent = 'Este dispositivo não suporta geolocalização.';
+          return;
+        }
+        geoStatus.textContent = 'A localizar…';
+        navigator.geolocation.getCurrentPosition(
+          (pos) => {
+            const { latitude, longitude } = pos.coords;
+            geoStatus.textContent = `Localização obtida: ${latitude.toFixed(4)}, ${longitude.toFixed(4)}`;
+          },
+          () => {
+            geoStatus.textContent = 'Não foi possível obter a localização.';
+          },
+          { enableHighAccuracy: true, timeout: 8000 }
+        );
+      });
+    }
+
+    if (Auth.isAuthenticated()) {
+      const user = Auth.getUser();
+      const loginLink = document.querySelector('a[href="/auth/login.html"]');
+      const registerLink = document.querySelector('a[href="/auth/cadastro.html"]');
+
+      if (loginLink) {
+        loginLink.textContent = 'Dashboard';
+        loginLink.href = user.tipo === 'cliente' ? '/cliente/dashboard.html' : '/farmacia/dashboard.html';
+      }
+
+      if (registerLink) {
+        registerLink.style.display = 'none';
+      }
+    }
+  </script>
+</body>
+</html>
